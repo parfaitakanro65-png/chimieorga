@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#075985">
+<title>CHIMIE ORGANIQUE — Laboratoire virtuel</title>
+
+<style>
+:root{
+  --blue:#075985;
+  --blue2:#0284c7;
+  --sky:#e0f2fe;
+  --gold:#fbbf24;
+  --ink:#17324d;
+  --green:#15803d;
+  --red:#b91c1c;
+  --white:#fff;
+  --shadow:0 8px 24px #0f35541a;
+  --radius:16px;
+}
+*{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  color:var(--ink);
+  background:linear-gradient(135deg,#e0f2fe,#f8fafc 55%,#dbeafe);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  overflow-x:hidden;
+}
+button,input,select{font:inherit}
+button{cursor:pointer;touch-action:manipulation}
+
+header{
+  background:linear-gradient(120deg,#082f49,#075985,#0284c7);
+  color:white;
+  padding:16px max(4%,calc((100% - 1200px)/2)) 12px;
+  border-bottom:4px solid var(--gold);
+  position:sticky;
+  top:0;
+  z-index:100;
+  box-shadow:0 4px 20px rgba(7,89,133,0.25);
+}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{
+  width:48px;height:48px;flex-shrink:0;border-radius:14px;
+  display:grid;place-items:center;background:#ffffff20;
+  font-size:26px;border:1px solid #ffffff55;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+header h1{margin:0;font-size:clamp(1.15rem,3.2vw,2.1rem);font-weight:800;letter-spacing:-0.5px}
+header p{margin:3px 0 0;line-height:1.4;color:#e0f2fe;font-size:clamp(0.78rem,1.8vw,0.92rem)}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pill{
+  background:#ffffff1c;border:1px solid #ffffff55;
+  border-radius:30px;padding:5px 11px;font-size:.78rem;font-weight:600;
+  white-space:nowrap;
+}
+
+nav{
+  display:flex;gap:8px;margin-top:12px;
+  overflow-x:auto;
+  padding-bottom:4px;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+nav::-webkit-scrollbar{display:none}
+nav button{
+  border:1px solid #ffffff40;background:#ffffff15;color:white;
+  padding:9px 14px;border-radius:10px;font-weight:600;font-size:0.9rem;
+  white-space:nowrap;flex-shrink:0;
+  transition:all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display:inline-flex;align-items:center;gap:6px;
+}
+nav button.active,nav button:hover{background:white;color:var(--blue);box-shadow:0 4px 12px rgba(0,0,0,0.15)}
+
+main{
+  max-width:1200px;margin:auto;
+  padding:18px 4% 35px;
+  flex:1;width:100%;
+}
+.section{display:none}
+.section.active{display:block;animation:fadeIn 0.25s ease-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.intro{margin-bottom:16px}
+h2{color:var(--blue);margin:0 0 10px;font-size:clamp(1.2rem,2.8vw,1.75rem)}
+h3{color:var(--blue);margin:0 0 10px;font-size:clamp(1.05rem,2.2vw,1.35rem)}
+p{line-height:1.6;font-size:0.95rem}
+
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.card{
+  background:#ffffffed;border:1px solid #d7e6f2;border-radius:var(--radius);
+  padding:18px;box-shadow:var(--shadow);min-width:0;
+}
+
+.controls{
+  display:grid;grid-template-columns:1.2fr 1fr;gap:10px;margin:12px 0 16px;
+}
+input,select{
+  width:100%;padding:12px 14px;border:1.5px solid #bfd5e5;border-radius:10px;
+  background:white;color:var(--ink);min-width:0;font-size:16px;
+  transition:border-color 0.2s;
+}
+input:focus,select:focus{
+  outline:none;border-color:var(--blue2);box-shadow:0 0 0 3px #0284c725;
+}
+
+.btn{
+  border:0;border-radius:10px;padding:12px 18px;font-weight:700;
+  background:var(--blue2);color:white;transition:.2s;
+  display:inline-flex;align-items:center;justify-content:center;
+  text-align:center;font-size:0.95rem;
+}
+.btn:hover{filter:brightness(.92);transform:translateY(-1px)}
+.btn:active{transform:translateY(1px)}
+.btn.secondary{background:#e0f2fe;color:var(--blue);border:1px solid #bae6fd}
+.btn.secondary:hover{background:#d0ebff}
+.btn.gold{background:var(--gold);color:#422006}
+.btn.green{background:var(--green)}
+.btn-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+
+.model{
+  background:radial-gradient(circle at 50% 30%,#fff,#e0f2fe);
+  border:1.5px solid #c9e5f6;border-radius:14px;min-height:250px;
+  display:grid;place-items:center;overflow:hidden;padding:8px;
+  position:relative;
+}
+.model svg{width:100%;height:auto;max-height:290px;display:block}
+.legend{
+  display:flex;flex-wrap:wrap;gap:8px 12px;font-size:.82rem;margin-top:10px;
+  background:#f8fbff;padding:10px 12px;border-radius:10px;border:1px solid #e2e8f0;
+}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.dot{width:12px;height:12px;border-radius:50%;display:inline-block;flex-shrink:0}
+.atom-C{fill:#263746}.atom-O{fill:#dc2626}.atom-H{fill:#f8fafc;stroke:#94a3b8}
+.atom-N{fill:#2563eb}.atom-S{fill:#eab308}.atom-Cl{fill:#16a34a}
+.bond{stroke:#64748b;stroke-width:4;stroke-linecap:round}
+.bond.double{stroke-width:2.5}
+
+.formula{
+  font-size:clamp(1.6rem,4.5vw,2.4rem);font-weight:800;
+  color:var(--blue);margin:6px 0;letter-spacing:0.5px;
+}
+.sub{font-size:.85rem;color:#526b7f}
+.tag{
+  display:inline-block;border-radius:30px;background:#dbeafe;
+  color:#075985;padding:5px 12px;font-weight:700;font-size:.8rem;
+}
+
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.stat{background:#f0f9ff;padding:10px 8px;border-radius:10px;border:1px solid #dbeafe;text-align:center}
+.stat span{font-size:.75rem;color:#526b7f;text-transform:uppercase;font-weight:600;display:block}
+.stat strong{display:block;font-size:1.1rem;color:var(--blue);margin-top:2px}
+
+.list{padding-left:18px;line-height:1.75;font-size:0.95rem}
+.product{
+  border:1px solid #dbeafe;background:#f8fbff;border-radius:12px;
+  padding:12px 14px;margin-top:10px;
+}
+.product strong{color:var(--blue);display:block;margin-bottom:3px}
+.notice{
+  border-left:4px solid var(--gold);background:#fffbeb;
+  color:#713f12;padding:12px 14px;border-radius:8px;margin-top:14px;line-height:1.55;
+  font-size:0.9rem;
+}
+.equation{
+  padding:16px 12px;text-align:center;background:#eff6ff;border-radius:12px;
+  font-size:clamp(0.95rem,2.8vw,1.45rem);font-weight:bold;line-height:1.6;
+  overflow-wrap:anywhere;color:#075985;border:1px solid #bfdbfe;
+}
+.reaction-step{display:flex;gap:12px;margin:12px 0;align-items:flex-start}
+.number{
+  background:var(--blue);color:white;border-radius:50%;width:28px;height:28px;
+  display:grid;place-items:center;flex-shrink:0;font-weight:bold;font-size:0.85rem;
+}
+.progress{height:8px;background:#dbeafe;border-radius:20px;overflow:hidden}
+.progress div{height:100%;width:0;background:#16a34a;transition:width .3s}
+
+.quiz-option{
+  display:block;text-align:left;width:100%;margin:8px 0;padding:12px 14px;
+  background:white;border:1.5px solid #cbd5e1;border-radius:10px;color:var(--ink);
+  font-size:0.95rem;transition:all 0.15s;
+}
+.quiz-option:hover{border-color:var(--blue2);background:#f0f9ff}
+.quiz-option.correct{border-color:#16a34a;background:#dcfce7;font-weight:bold}
+.quiz-option.wrong{border-color:#dc2626;background:#fee2e2}
+.small{font-size:.85rem;color:#536b7e}
+
+footer{
+  text-align:center;
+  padding:22px 16px 26px;
+  background:#082f49;
+  color:#dbeafe;
+  line-height:1.7;
+  border-top:3px solid var(--blue2);
+  margin-top:auto;
+}
+.footer-credit{
+  display:inline-block;
+  margin:10px auto 4px;
+  padding:7px 18px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(251,191,36,0.6);
+  border-radius:30px;
+  font-weight:700;
+  color:#fbbf24;
+  letter-spacing:0.4px;
+  font-size:0.92rem;
+}
+.footer-credit a{
+  color:#fbbf24;text-decoration:none;font-weight:bold;
+}
+.footer-credit a:hover{
+  text-decoration:underline;
+}
+
+hr{border:0;border-top:1px solid #dbe6ef;margin:16px 0}
+
+/* RESPONSIVE SMARTPHONES ET TABLETTES (< 768px) */
+@media(max-width:768px){
+  header{padding:12px 4% 10px;position:relative}
+  .grid{grid-template-columns:1fr;gap:14px}
+  .controls{grid-template-columns:1fr;gap:8px}
+  .stat-grid{grid-template-columns:repeat(3,1fr);gap:6px}
+  .stat{padding:8px 4%}
+  .stat strong{font-size:1rem}
+  .card{padding:15px;border-radius:14px}
+  .btn-row{display:grid;grid-template-columns:1fr;gap:8px}
+  .btn-row .btn{width:100%}
+  .model{min-height:220px}
+  nav{gap:6px;margin-top:10px}
+  nav button{padding:8px 12px;font-size:0.84rem}
+  .topline{flex-direction:row;align-items:center}
+}
+
+/* SMARTPHONES ETROITS (< 480px) */
+@media(max-width:480px){
+  .brand{gap:10px}
+  .logo{width:42px;height:42px;font-size:22px;border-radius:10px}
+  .pill{font-size:0.7rem;padding:4px 8px}
+  .legend{font-size:0.75rem;padding:8px}
+  .footer-credit{font-size:0.85rem;padding:6px 14px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="topline">
+    <div class="brand">
+      <div class="logo">⚗️</div>
+      <div>
+        <h1>CHIMIE ORGANIQUE</h1>
+        <p>Laboratoire virtuel — Explorer, visualiser, comprendre</p>
+      </div>
+    </div>
+    <span class="pill">Édition pédagogique · Bénin</span>
+  </div>
+  <nav aria-label="Navigation principale">
+    <button class="active" data-page="explorer">🔬 Explorer</button>
+    <button data-page="reactions">⚗️ Réactions</button>
+    <button data-page="produits">🧴 Produits courants</button>
+    <button data-page="quiz">🧠 Quiz</button>
+    <button data-page="apropos">📘 Guide</button>
+  </nav>
+</header>
+
+<main>
+  <!-- EXPLORATEUR -->
+  <section class="section active" id="explorer">
+    <div class="intro">
+      <h2>Explorateur de molécules</h2>
+      <p>Choisissez un composé organique pour examiner sa représentation moléculaire, ses formules, sa famille chimique et des exemples de produits qui le contiennent ou qui sont fabriqués à partir de lui.</p>
+    </div>
+
+    <div class="card">
+      <div class="controls">
+        <input id="search" type="search" placeholder="🔎 Rechercher : éthanol, C₂H₆O, acide..." aria-label="Rechercher un composé">
+        <select id="compoundSelect" aria-label="Choisir un composé"></select>
+      </div>
+
+      <div class="grid">
+        <div>
+          <div class="model" id="moleculeModel" aria-label="Représentation schématique de la molécule"></div>
+          <div class="legend">
+            <span><i class="dot" style="background:#263746"></i> Carbone (C)</span>
+            <span><i class="dot" style="background:#f8fafc;border:1px solid #94a3b8"></i> Hydrogène (H)</span>
+            <span><i class="dot" style="background:#dc2626"></i> Oxygène (O)</span>
+            <span><i class="dot" style="background:#2563eb"></i> Azote (N)</span>
+            <span><i class="dot" style="background:#eab308"></i> Soufre (S)</span>
+          </div>
+          <p class="small">Schéma 2D simplifié : les positions ne représentent pas exactement la géométrie réelle en 3D.</p>
+        </div>
+
+        <div>
+          <span class="tag" id="family">Famille chimique</span>
+          <h2 id="compoundName" style="margin-top:12px">Éthanol</h2>
+          <div class="formula" id="formula">C₂H₆O</div>
+          <p><strong>Formule semi-développée :</strong> <span id="semi">CH₃–CH₂–OH</span></p>
+          <p><strong>Masse molaire :</strong> <span id="mass">46,07 g/mol</span></p>
+          <p><strong>Groupe caractéristique :</strong> <span id="group">Hydroxyle –OH</span></p>
+          <p id="description"></p>
+          <div class="stat-grid">
+            <div class="stat"><span>Atomes</span><strong id="atoms">9</strong></div>
+            <div class="stat"><span>Liaisons dessinées</span><strong id="bonds">8</strong></div>
+            <div class="stat"><span>Famille</span><strong id="familyShort">Alcool</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <hr>
+      <h3>Exemples de produits de la vie courante</h3>
+      <div id="examples"></div>
+      <div class="notice" id="safety"></div>
+      <div class="btn-row">
+        <button class="btn" onclick="nextCompound()">Composé suivant →</button>
+        <button class="btn secondary" onclick="window.print()">Imprimer la fiche</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- REACTIONS -->
+  <section class="section" id="reactions">
+    <div class="intro">
+      <h2>Simulateur de réactions chimiques</h2>
+      <p>Sélectionnez une réaction pour afficher son équation, comprendre les réactifs et découvrir les produits obtenus. Les simulations sont théoriques et explicatives.</p>
+    </div>
+    <div class="card">
+      <label for="reactionSelect"><strong>Choisir une réaction</strong></label>
+      <select id="reactionSelect" style="margin:10px 0 18px"></select>
+      <span class="tag" id="reactionType">Transformation chimique</span>
+      <h2 id="reactionName" style="margin-top:12px"></h2>
+      <div class="equation" id="equation"></div>
+      <p id="reactionIntro"></p>
+      <div id="reactionSteps"></div>
+      <div class="notice" id="reactionNote"></div>
+      <div class="btn-row">
+        <button class="btn" id="simulateBtn">▶ Simuler la transformation</button>
+        <button class="btn secondary" id="resetReaction">Réinitialiser</button>
+      </div>
+      <div id="simulationResult" style="margin-top:18px" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- PRODUITS -->
+  <section class="section" id="produits">
+    <div class="intro">
+      <h2>Chimie dans la vie courante</h2>
+      <p>Découvrez les liens entre la chimie organique, l'alimentation, les soins, les matériaux et les produits ménagers.</p>
+    </div>
+    <div class="card">
+      <input id="productSearch" type="search" placeholder="🔎 Rechercher un produit ou un composé...">
+      <div id="productCatalog" style="margin-top:14px"></div>
+      <div class="notice">Attention : la présence d'un composé dans un produit dépend de sa formulation. Les exemples ci-dessous sont pédagogiques et ne signifient pas que toutes les marques ou toutes les versions contiennent ce composé.</div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="section" id="quiz">
+    <div class="intro">
+      <h2>Testez vos connaissances</h2>
+      <p>Répondez aux questions pour vérifier votre compréhension des molécules et des familles organiques.</p>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+        <span class="tag" id="quizCounter">Question 1</span>
+        <strong>Score : <span id="quizScore">0</span></strong>
+      </div>
+      <div class="progress" style="margin:14px 0 20px"><div id="quizProgress"></div></div>
+      <h3 id="question"></h3>
+      <div id="answers"></div>
+      <p id="quizFeedback" aria-live="polite"></p>
+      <div class="btn-row">
+        <button class="btn" id="nextQuestion" disabled>Question suivante →</button>
+        <button class="btn secondary" id="restartQuiz">Recommencer</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- GUIDE -->
+  <section class="section" id="apropos">
+    <div class="intro">
+      <h2>Guide d'utilisation</h2>
+      <p>Une ressource de découverte et de révision en chimie organique.</p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <h3>1. Comprendre une molécule</h3>
+        <p>La formule brute indique les types et nombres d'atomes. La formule semi-développée montre une partie de leur organisation. Les liaisons représentent les connexions entre les atomes.</p>
+        <p><strong>Exemple :</strong> CH₃–CH₂–OH est la formule semi-développée de l'éthanol.</p>
+      </div>
+      <div class="card">
+        <h3>2. Reconnaître une famille</h3>
+        <ul class="list">
+          <li><strong>Alcool :</strong> groupe hydroxyle –OH.</li>
+          <li><strong>Acide carboxylique :</strong> groupe –COOH.</li>
+          <li><strong>Cétone :</strong> groupe carbonyle C=O entre deux carbones.</li>
+          <li><strong>Alcène :</strong> au moins une double liaison C=C.</li>
+          <li><strong>Ester :</strong> groupe caractéristique –COO–.</li>
+          <li><strong>Glucide :</strong> famille comprenant notamment les sucres.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>3. Comprendre une réaction</h3>
+        <p>Les réactifs sont les substances de départ. Une transformation chimique réorganise les atomes pour former des produits. Une équation correctement équilibrée conserve le nombre d'atomes de chaque élément.</p>
+      </div>
+      <div class="card">
+        <h3>4. Limites du laboratoire virtuel</h3>
+        <p>Les dessins moléculaires sont des schémas 2D simplifiés et non des modèles 3D calculés. Les équations sont pédagogiques : les conditions réelles, les rendements et les réactions secondaires ne sont pas modélisés.</p>
+        <div class="notice">Ne réalisez pas de réaction chimique à la maison sur la seule base de cette application. Certaines substances sont inflammables, corrosives ou toxiques.</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <strong>CHIMIE ORGANIQUE — Laboratoire virtuel</strong><br>
+  Application éducative · Découvrir les molécules et leurs usages<br>
+  <div class="footer-credit">Conçu par Parfait AKANRO — <a href="tel:0196322089">0196322089</a></div><br>
+  <small>© 2026 — Prototype pédagogique autonome</small>
+</footer>
+
+<script>
+"use strict";
+
+const compounds = [
+{
+ id:"methane",name:"Méthane",formula:"CH₄",searchFormula:"CH4",semi:"CH₄",
+ mass:"16,04 g/mol",family:"Alcane",group:"Liaisons simples C–H",
+ description:"Le méthane est le plus simple des alcanes. C'est un gaz combustible qui constitue un composant majeur du gaz naturel.",
+ atoms:5,bonds:4,
+ examples:[
+  ["Gaz naturel","Le méthane est généralement le principal constituant du gaz naturel, dont la composition varie."],
+  ["Biogaz","Le biogaz issu de la décomposition de matières organiques contient souvent du méthane."]
+ ],
+ safety:"Le méthane est extrêmement inflammable et peut former des mélanges explosifs avec l'air. Il ne doit pas être inhalé en espace confiné.",
+ nodes:[["C",150,100],["H",150,40],["H",150,160],["H",90,100],["H",210,100]],
+ links:[[0,1],[0,2],[0,3],[0,4]]
+},
+{
+ id:"methanol",name:"Méthanol",formula:"CH₄O",searchFormula:"CH4O",semi:"CH₃–OH",
+ mass:"32,04 g/mol",family:"Alcool",group:"Hydroxyle –OH",
+ description:"Le méthanol, ou alcool de bois, est le plus simple des alcools. Il est couramment employé comme solvant industriel et matière première de synthèse.",
+ atoms:6,bonds:5,
+ examples:[
+  ["Solvant industriel","Utilisé pour dissoudre des résines, peintures et vernis."],
+  ["Carburants de compétition","Employé comme carburant à haut indice d'octane pour moteurs spécifiques."],
+  ["Synthèse du formaldéhyde","Matière première essentielle pour produire des colles et résines."]
+ ],
+ safety:"Le méthanol est hautement toxique par ingestion, inhalation ou contact cutané. Une faible dose peut provoquer la cécité ou la mort.",
+ nodes:[["C",120,100],["O",190,100],["H",120,40],["H",60,100],["H",120,160],["H",240,100]],
+ links:[[0,1],[0,2],[0,3],[0,4],[1,5]]
+},
+{
+ id:"ethanol",name:"Éthanol",formula:"C₂H₆O",searchFormula:"C2H6O",semi:"CH₃–CH₂–OH",
+ mass:"46,07 g/mol",family:"Alcool",group:"Hydroxyle –OH",
+ description:"L'éthanol est un alcool utilisé comme solvant et désinfectant dans certaines formulations. Il peut aussi être produit par fermentation de sucres.",
+ atoms:9,bonds:8,
+ examples:[
+  ["Certains désinfectants","L'éthanol est présent dans de nombreux gels et solutions hydroalcooliques, selon leur formulation."],
+  ["Boissons alcoolisées","L'éthanol est l'alcool produit par fermentation et présent dans les boissons alcoolisées."],
+  ["Bioéthanol","Il peut servir de composant de certains carburants."]
+ ],
+ safety:"L'éthanol est inflammable. Il ne faut jamais boire un produit désinfectant ou un alcool destiné à un usage industriel.",
+ nodes:[["C",80,100],["C",150,100],["O",220,100],["H",45,55],["H",45,145],["H",80,150],["H",150,55],["H",150,145],["H",260,100]],
+ links:[[0,1],[1,2],[0,3],[0,4],[0,5],[1,6],[1,7],[2,8]]
+},
+{
+ id:"propane",name:"Propane",formula:"C₃H₈",searchFormula:"C3H8",semi:"CH₃–CH₂–CH₃",
+ mass:"44,10 g/mol",family:"Alcane",group:"Liaisons simples C–C et C–H",
+ description:"Le propane est un gaz combustible liquéfiable sous pression modérée, appartenant à la famille des gaz de pétrole liquéfiés (GPL).",
+ atoms:11,bonds:10,
+ examples:[
+  ["Bouteilles de gaz domestique","Utilisé pour la cuisson ménagère et le réchaud de cuisine."],
+  ["Chauffage extérieur","Carburant pour chauffages d'appoint et parasols chauffants."],
+  ["GPL carburant","Mélangé au butane pour alimenter les moteurs thermiques adaptés."]
+ ],
+ safety:"Hautement inflammable et explosif au contact de l'air et d'une étincelle. Gaz plus lourd que l'air risquant l'asphyxie en sous-sol.",
+ nodes:[["C",80,100],["C",150,100],["C",220,100],["H",80,45],["H",80,155],["H",25,100],["H",150,45],["H",150,155],["H",220,45],["H",220,155],["H",275,100]],
+ links:[[0,1],[1,2],[0,3],[0,4],[0,5],[1,6],[1,7],[2,8],[2,9],[2,10]]
+},
+{
+ id:"butane",name:"Butane",formula:"C₄H₁₀",searchFormula:"C4H10",semi:"CH₃–CH₂–CH₂–CH₃",
+ mass:"58,12 g/mol",family:"Alcane",group:"Chaîne carbonée saturée",
+ description:"Le butane est un hydrocarbure saturé gazeux à température ambiante, couramment utilisé pour l'alimentation en gaz des réchauds et briquets.",
+ atoms:14,bonds:13,
+ examples:[
+  ["Briquets et recharges","Combustible liquide pressurisé standard des briquets jetables."],
+  ["Bouteilles de gaz de cuisine","Très répandu pour les cuisinières et réchauds au Bénin et en Afrique de l'Ouest."],
+  ["Propulseur d'aérosol","Employé comme gaz propulseur dans certains déodorants et sprays."]
+ ],
+ safety:"Gaz inflammable stocké sous pression. Risque d'explosion en cas d'exposition à de fortes chaleurs ou fuite dans une pièce confinée.",
+ nodes:[["C",60,100],["C",120,100],["C",180,100],["C",240,100],["H",15,100],["H",60,45],["H",60,155],["H",120,45],["H",120,155],["H",180,45],["H",180,155],["H",240,45],["H",240,155],["H",285,100]],
+ links:[[0,1],[1,2],[2,3],[0,4],[0,5],[0,6],[1,7],[1,8],[2,9],[2,10],[3,11],[3,12],[3,13]]
+},
+{
+ id:"ethene",name:"Éthène (éthylène)",formula:"C₂H₄",searchFormula:"C2H4",semi:"CH₂=CH₂",
+ mass:"28,05 g/mol",family:"Alcène",group:"Double liaison C=C",
+ description:"L'éthène est un hydrocarbure insaturé utilisé comme matière première de l'industrie chimique. C'est également une hormone végétale impliquée dans le mûrissement de nombreux fruits.",
+ atoms:6,bonds:5,
+ examples:[
+  ["Mûrissement des fruits","L'éthène est naturellement produit par de nombreux fruits et influence leur mûrissement."],
+  ["Polyéthylène","L'éthène sert de matière première pour fabriquer ce plastique ; le polyéthylène final n'est pas simplement de l'éthène."]
+ ],
+ safety:"L'éthène est un gaz inflammable. Les procédés industriels de polymérisation nécessitent des installations adaptées.",
+ nodes:[["C",105,100],["C",185,100],["H",65,60],["H",65,140],["H",225,60],["H",225,140]],
+ links:[[0,1,"double"],[0,2],[0,3],[1,4],[1,5]]
+},
+{
+ id:"ethyne",name:"Éthyne (acétylène)",formula:"C₂H₂",searchFormula:"C2H2",semi:"CH≡CH",
+ mass:"26,04 g/mol",family:"Alcyne",group:"Triple liaison C≡C",
+ description:"L'acétylène est un gaz hydrocarbure hautement insaturé connu pour produire une flamme extrêmement chaude lorsqu'il brûle avec de l'oxygène pur.",
+ atoms:4,bonds:3,
+ examples:[
+  ["Soudure oxyacétylénique","Produit une flamme dépassant 3100 °C pour couper et souder les métaux."],
+  ["Synthèse organique","Intermédiaire pour fabriquer des plastiques et monomères industriels."]
+ ],
+ safety:"Gaz instable susceptible d'exploser sous pression sans oxygène ; stocké dissous dans l'acétone sur matière poreuse.",
+ nodes:[["C",110,100],["C",190,100],["H",45,100],["H",255,100]],
+ links:[[0,1,"double"],[0,2],[1,3]]
+},
+{
+ id:"formic",name:"Acide méthanoïque (formique)",formula:"CH₂O₂",searchFormula:"CH2O2",semi:"H–COOH",
+ mass:"46,03 g/mol",family:"Acide carboxylique",group:"Carboxyle –COOH",
+ description:"Le plus simple des acides carboxyliques. Présent naturellement dans le venin de fourmi et les orties, il possède un fort pouvoir réducteur et antibactérien.",
+ atoms:5,bonds:4,
+ examples:[
+  ["Venin d'insectes","Responsable de la sensation de brûlure lors d'une piqûre de fourmi rousse."],
+  ["Conservateur ensilage","Utilisé dans l'agriculture pour la fermentation du fourrage et comme antibactérien."],
+  ["Tannerie du cuir","Employé pour la décantation et le tannage des peaux."]
+ ],
+ safety:"Corrosif et toxique par inhalation. Provoque de graves brûlures cutanées et des lésions oculaires à l'état pur.",
+ nodes:[["C",140,100],["O",140,40],["O",205,130],["H",75,100],["H",255,130]],
+ links:[[0,1,"double"],[0,2],[0,3],[2,4]]
+},
+{
+ id:"acetic",name:"Acide éthanoïque (acétique)",formula:"C₂H₄O₂",searchFormula:"C2H4O2",semi:"CH₃–COOH",
+ mass:"60,05 g/mol",family:"Acide carboxylique",group:"Carboxyle –COOH",
+ description:"L'acide éthanoïque est responsable de l'acidité caractéristique du vinaigre. Le vinaigre alimentaire est une solution aqueuse qui en contient une proportion variable.",
+ atoms:8,bonds:7,
+ examples:[
+  ["Vinaigre","L'acide acétique dilué est le principal acide caractéristique du vinaigre."],
+  ["Produits alimentaires","Il peut servir d'acidifiant ou de conservateur dans certaines préparations."]
+ ],
+ safety:"L'acide acétique concentré est corrosif. Le vinaigre alimentaire est beaucoup plus dilué. Ne mélangez pas des produits ménagers au hasard.",
+ nodes:[["C",80,100],["C",150,100],["O",205,60],["O",205,140],["H",45,55],["H",45,145],["H",80,155],["H",255,140]],
+ links:[[0,1],[1,2],[1,3],[0,4],[0,5],[0,6],[3,7]]
+},
+{
+ id:"ethanal",name:"Éthanal (acétaldéhyde)",formula:"C₂H₄O",searchFormula:"C2H4O",semi:"CH₃–CHO",
+ mass:"44,05 g/mol",family:"Aldéhyde",group:"Carbonyle terminal –CHO",
+ description:"L'éthanal est un aldéhyde volatil à odeur fruitée piquante, produit intermédiaire majeur du métabolisme de l'éthanol dans l'organisme.",
+ atoms:7,bonds:6,
+ examples:[
+  ["Métabolisme hépatique","Métabolite toxique produit par le foie lors de la dégradation de l'alcool."],
+  ["Synthèse chimique","Précurseur de l'acide acétique, du butadiène et de nombreux arômes artificiels."],
+  ["Fruits mûrs","Trace naturelle participant au profil aromatique de certains fruits et du café torréfié."]
+ ],
+ safety:"Substance irritante, inflammable et classée potentiellement cancérogène. Manipuler impérativement sous hotte.",
+ nodes:[["C",85,100],["C",165,100],["O",220,50],["H",45,60],["H",45,140],["H",85,155],["H",180,155]],
+ links:[[0,1],[1,2,"double"],[0,3],[0,4],[0,5],[1,6]]
+},
+{
+ id:"acetone",name:"Propanone (acétone)",formula:"C₃H₆O",searchFormula:"C3H6O",semi:"CH₃–CO–CH₃",
+ mass:"58,08 g/mol",family:"Cétone",group:"Carbonyle >C=O",
+ description:"L'acétone est un solvant organique volatil. Elle est employée dans certains dissolvants et dans diverses applications industrielles.",
+ atoms:10,bonds:9,
+ examples:[
+  ["Certains dissolvants pour vernis","Certains dissolvants contiennent de l'acétone ; d'autres utilisent des solvants différents."],
+  ["Industrie","L'acétone sert de solvant ou d'intermédiaire de fabrication."]
+ ],
+ safety:"L'acétone est très inflammable et irritante. Utilisez-la uniquement dans des conditions adaptées, loin des flammes et sources d'étincelles.",
+ nodes:[["C",60,100],["C",140,100],["C",220,100],["O",140,40],["H",25,55],["H",25,145],["H",60,150],["H",245,55],["H",245,145],["H",220,150]],
+ links:[[0,1],[1,2],[1,3],[0,4],[0,5],[0,6],[2,7],[2,8],[2,9]]
+},
+{
+ id:"ethylacetate",name:"Éthanoate d'éthyle (acétate d'éthyle)",formula:"C₄H₈O₂",searchFormula:"C4H8O2",semi:"CH₃–COO–CH₂–CH₃",
+ mass:"88,11 g/mol",family:"Ester",group:"Groupe ester –COO–",
+ description:"L'éthanoate d'éthyle est un ester à odeur fruitée utilisé comme solvant dans diverses applications. Il peut être préparé par estérification de l'acide éthanoïque par l'éthanol.",
+ atoms:14,bonds:13,
+ examples:[
+  ["Certains vernis et dissolvants","Il peut être présent comme solvant dans certaines formulations."],
+  ["Parfumerie et arômes","Il est employé dans certaines formulations aromatiques, selon les usages autorisés."]
+ ],
+ safety:"C'est un liquide inflammable. La composition des produits commerciaux varie : vérifiez l'étiquette avant tout usage.",
+ nodes:[["C",50,100],["C",110,100],["O",155,55],["O",155,145],["C",210,145],["C",265,145],["H",30,55],["H",30,145],["H",50,150],["H",210,185],["H",210,105],["H",265,185],["H",290,105],["H",290,185]],
+ links:[[0,1],[1,2],[1,3],[3,4],[4,5],[0,6],[0,7],[0,8],[4,9],[4,10],[5,11],[5,12],[5,13]]
+},
+{
+ id:"glycerol",name:"Glycérol",formula:"C₃H₈O₃",searchFormula:"C3H8O3",semi:"HO–CH₂–CH(OH)–CH₂–OH",
+ mass:"92,09 g/mol",family:"Triol (alcool)",group:"Trois groupes hydroxyles –OH",
+ description:"Le glycérol est un liquide visqueux qui retient l'humidité. Il est utilisé dans de nombreuses formulations cosmétiques, pharmaceutiques et alimentaires.",
+ atoms:14,bonds:13,
+ examples:[
+  ["Crèmes et savons","Le glycérol est un humectant présent dans de nombreuses formulations."],
+  ["Produits pharmaceutiques","Il peut entrer dans la composition de certains produits, selon leur formulation."],
+  ["Aliments","Le glycérol ou ses dérivés peuvent être utilisés dans certaines applications alimentaires autorisées."]
+ ],
+ safety:"La sécurité dépend de la qualité du produit et de son usage. N'ingérez pas de produit cosmétique ou industriel.",
+ nodes:[["O",45,100],["C",100,100],["C",160,100],["C",220,100],["O",275,100],["O",160,45],["H",20,100],["H",85,55],["H",85,145],["H",160,145],["H",235,55],["H",235,145],["H",305,100],["H",160,15]],
+ links:[[0,1],[1,2],[2,3],[3,4],[2,5],[0,6],[1,7],[1,8],[2,9],[3,10],[3,11],[4,12],[5,13]]
+},
+{
+ id:"benzene",name:"Benzène",formula:"C₆H₆",searchFormula:"C6H6",semi:"Cycle aromatique C₆H₆",
+ mass:"78,11 g/mol",family:"Hydrocarbure aromatique",group:"Cycle aromatique",
+ description:"Le benzène est un hydrocarbure aromatique utilisé comme matière première industrielle. Il ne doit pas être confondu avec les substances aromatiques au sens du parfum.",
+ atoms:12,bonds:12,
+ examples:[
+  ["Industrie chimique","Le benzène sert à fabriquer divers produits chimiques et matériaux."],
+  ["Matières premières","Certains polymères et résines sont issus de chaînes industrielles utilisant des dérivés du benzène."]
+ ],
+ safety:"Le benzène est cancérogène. Il ne doit pas être manipulé hors de cadres professionnels strictement contrôlés. Il n'est pas un ingrédient à utiliser à la maison.",
+ nodes:[["C",150,35],["C",205,67],["C",205,132],["C",150,165],["C",95,132],["C",95,67],["H",150,10],["H",240,53],["H",240,147],["H",150,190],["H",60,147],["H",60,53]],
+ links:[[0,1,"double"],[1,2],[2,3,"double"],[3,4],[4,5,"double"],[5,0],[0,6],[1,7],[2,8],[3,9],[4,10],[5,11]]
+},
+{
+ id:"glycine",name:"Glycine (acide aminé)",formula:"C₂H₅NO₂",searchFormula:"C2H5NO2",semi:"H₂N–CH₂–COOH",
+ mass:"75,07 g/mol",family:"Acide aminé",group:"Amine –NH₂ et carboxyle –COOH",
+ description:"La glycine est le plus simple des acides aminés constitutifs des protéines. Elle joue un rôle vital dans la synthèse du collagène et neurotransmetteur inhibiteur.",
+ atoms:10,bonds:9,
+ examples:[
+  ["Collagène humain","Composant majeur (environ un tiers des résidus) du collagène osseux et cutané."],
+  ["Compléments nutritionnels","Employée dans la nutrition sportive et médicale."],
+  ["Solutions tampons de laboratoire","Utilisée en biochimie pour les électrophorèses SDS-PAGE."]
+ ],
+ safety:"Substance biologique non toxique dans les conditions d'utilisation courantes et alimentaires.",
+ nodes:[["N",60,100],["C",125,100],["C",195,100],["O",245,55],["O",235,145],["H",30,65],["H",30,135],["H",125,45],["H",125,155],["H",285,145]],
+ links:[[0,1],[1,2],[2,3,"double"],[2,4],[0,5],[0,6],[1,7],[1,8],[4,9]]
+},
+{
+ id:"urea",name:"Urée (carbamide)",formula:"CH₄N₂O",searchFormula:"CH4N2O",semi:"(NH₂)₂C=O",
+ mass:"60,06 g/mol",family:"Amide",group:"Fonction carbonyle liée à deux amines",
+ description:"L'urée est le principal déchet azoté éliminé par l'urine chez l'homme. Synthétisée pour la première fois par Wöhler en 1828, elle a marqué la naissance de la chimie organique moderne.",
+ atoms:8,bonds:7,
+ examples:[
+  ["Engrais agricoles","L'engrais azoté le plus concentré et le plus répandu au monde pour les cultures."],
+  ["AdBlue (antipollution diesel)","Solution aqueuse d'urée réduisant les oxydes d'azote (NOx) dans l'échappement."],
+  ["Cosmétiques hydratants","Agent kératolytique et hydratant puissant dans les crèmes pour pieds et mains."]
+ ],
+ safety:"Peu toxique, mais irritante pour les yeux et les voies respiratoires sous forme de poussières concentrées.",
+ nodes:[["C",150,100],["O",150,35],["N",90,140],["N",210,140],["H",50,115],["H",70,185],["H",250,115],["H",230,185]],
+ links:[[0,1,"double"],[0,2],[0,3],[2,4],[2,5],[3,6],[3,7]]
+},
+{
+ id:"citric",name:"Acide citrique",formula:"C₆H₈O₇",searchFormula:"C6H8O7",semi:"HOOC–CH₂–C(OH)(COOH)–CH₂–COOH",
+ mass:"192,12 g/mol",family:"Acide carboxylique",group:"Trois groupes carboxyles et un hydroxyle",
+ description:"L'acide citrique est un acide organique présent naturellement dans les agrumes. Il est largement utilisé comme acidifiant dans l'alimentation.",
+ atoms:21,bonds:20,
+ examples:[
+  ["Citron et agrumes","L'acide citrique contribue à leur goût acidulé."],
+  ["Boissons et confiseries","Il peut servir d'acidifiant alimentaire, selon la recette."],
+  ["Certains produits de nettoyage","Il est utilisé dans certaines formulations pour aider à dissoudre les dépôts minéraux."]
+ ],
+ safety:"Ne confondez pas les solutions alimentaires diluées avec les produits concentrés. Évitez le contact avec les yeux et respectez les étiquettes.",
+ nodes:[["C",55,100],["C",110,100],["C",165,100],["C",220,100],["C",110,45],["C",220,155],["O",30,55],["O",30,145],["O",110,15],["O",165,55],["O",165,145],["O",220,45],["O",260,155],["H",55,145],["H",55,55],["H",110,125],["H",220,125],["H",5,55],["H",5,145],["H",290,155],["H",165,20]],
+ links:[[0,1],[1,2],[2,3],[1,4],[3,5],[0,6],[0,7],[4,8],[2,9],[2,10],[3,11],[5,12],[0,13],[0,14],[1,15],[3,16],[6,17],[7,18],[12,19],[9,20]]
+},
+{
+ id:"glucose",name:"Glucose",formula:"C₆H₁₂O₆",searchFormula:"C6H12O6",semi:"Formule cyclique ou chaîne ouverte",
+ mass:"180,16 g/mol",family:"Glucide (ose)",group:"Plusieurs hydroxyles et une fonction carbonyle en chaîne ouverte",
+ description:"Le glucose est un sucre simple utilisé par les cellules comme source d'énergie. Il est présent dans de nombreux fruits et dans le miel.",
+ atoms:24,bonds:24,
+ examples:[
+  ["Raisins et certains fruits","Le glucose fait partie des sucres naturellement présents, en proportions variables."],
+  ["Miel","Le miel contient du glucose et du fructose, avec une composition variable."],
+  ["Solutions de glucose","Elles sont utilisées dans certains contextes médicaux sous contrôle professionnel."],
+ ],
+ safety:"Les aliments sucrés doivent être consommés de façon équilibrée. Les solutions de glucose à usage médical ne s'utilisent que selon les indications appropriées.",
+ nodes:[["C",70,70],["C",130,50],["C",190,75],["C",190,135],["C",130,160],["O",70,130],["O",130,10],["O",245,75],["O",245,135],["O",130,195],["H",40,50],["H",90,50],["H",155,75],["H",175,40],["H",215,100],["H",170,160],["H",110,135],["H",40,150],["H",105,185],["H",245,45],["H",275,135],["H",100,10],["H",150,215],["H",35,100]],
+ links:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[1,6],[2,7],[3,8],[4,9],[0,10],[0,11],[1,12],[2,13],[2,14],[3,15],[4,16],[5,17],[4,18],[7,19],[8,20],[6,21],[9,22],[5,23]]
+},
+{
+ id:"caffeine",name:"Caféine",formula:"C₈H₁₀N₄O₂",searchFormula:"C8H10N4O2",semi:"Structure hétérocyclique (simplifiée)",
+ mass:"194,19 g/mol",family:"Alcaloïde",group:"Plusieurs fonctions azotées et carbonyles",
+ description:"La caféine est un composé stimulant présent naturellement dans le café, le thé et certaines autres plantes. Sa teneur varie selon le produit et sa préparation.",
+ atoms:24,bonds:24,
+ examples:[
+  ["Café","Le café contient généralement de la caféine, en quantité variable."],
+  ["Thé","Le thé contient de la caféine, parfois appelée théine."],
+  ["Certaines boissons énergisantes","Elles peuvent contenir de la caféine ajoutée ou d'autres sources de caféine."]
+ ],
+ safety:"Une consommation excessive de caféine peut provoquer des effets indésirables. La teneur et les recommandations varient selon les personnes et les produits.",
+ nodes:[["C",90,65],["N",145,45],["C",190,70],["N",190,125],["C",140,150],["N",85,125],["C",35,65],["O",190,20],["O",245,125],["N",35,150],["C",145,190],["C",145,10],["H",70,35],["H",15,50],["H",15,85],["H",65,175],["H",105,195],["H",175,210],["H",270,125],["H",190,160],["H",110,25],["H",220,55],["H",20,175],["H",115,150]],
+ links:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,6],[2,7],[3,8],[5,9],[4,10],[1,11],[0,12],[6,13],[6,14],[9,15],[10,16],[10,17],[8,18],[3,19],[11,20],[2,21],[9,22],[4,23]]
+}
+];
+
+const reactions = [
+{
+ id:"combustion",name:"Combustion complète de l'éthanol",
+ type:"Combustion",equation:"C₂H₅OH + 3 O₂ → 2 CO₂ + 3 H₂O",
+ intro:"En présence d'une quantité suffisante de dioxygène, la combustion complète de l'éthanol produit du dioxyde de carbone et de l'eau, en libérant de l'énergie.",
+ steps:[
+  ["Réactifs","Éthanol et dioxygène."],
+  ["Transformation","Les atomes se réorganisent pendant la combustion."],
+  ["Produits","Dioxyde de carbone et eau."]
+ ],
+ note:"Cette équation est un modèle théorique. L'éthanol et ses vapeurs sont inflammables. Aucune expérience avec une flamme n'est nécessaire pour utiliser ce simulateur.",
+ result:"Une molécule d'éthanol réagit avec trois molécules de dioxygène pour donner deux molécules de CO₂ et trois molécules de H₂O."
+},
+{
+ id:"esterification",name:"Estérification (modèle simplifié)",
+ type:"Estérification",equation:"CH₃COOH + C₂H₅OH ⇌ CH₃COOC₂H₅ + H₂O",
+ intro:"Un acide carboxylique peut réagir avec un alcool pour former un ester et de l'eau. La transformation est réversible et dépend des conditions et des proportions des réactifs.",
+ steps:[
+  ["Réactifs","Acide éthanoïque et éthanol."],
+  ["Transformation","Le groupe acide et le groupe alcool participent à la formation de l'ester."],
+  ["Produits","Éthanoate d'éthyle et eau."]
+ ],
+ note:"L'estérification réelle peut nécessiter un catalyseur et un chauffage contrôlé en laboratoire. Cette application n'indique pas de protocole expérimental.",
+ result:"Le modèle représente la formation de l'éthanoate d'éthyle et d'eau. Le rendement réel n'est pas calculé."
+},
+{
+ id:"hydration",name:"Hydratation de l'éthène",
+ type:"Addition",equation:"C₂H₄ + H₂O → C₂H₅OH",
+ intro:"L'hydratation de l'éthène est une réaction d'addition : l'eau est ajoutée à la double liaison de l'éthène pour former de l'éthanol dans des conditions industrielles appropriées.",
+ steps:[
+  ["Réactifs","Éthène et eau."],
+  ["Transformation","La double liaison C=C est transformée au cours de l'addition."],
+  ["Produit","Éthanol."]
+ ],
+ note:"La transformation industrielle nécessite des conditions contrôlées et un catalyseur. L'équation ne constitue pas un protocole de synthèse.",
+ result:"Le produit représenté est l'éthanol. Les atomes sont conservés : 2 carbones, 6 hydrogènes et 1 oxygène de chaque côté."
+},
+{
+ id:"fermentation",name:"Fermentation alcoolique du glucose",
+ type:"Fermentation",equation:"C₆H₁₂O₆ → 2 C₂H₅OH + 2 CO₂",
+ intro:"Dans certaines conditions, des levures transforment les sucres fermentescibles, notamment le glucose, en éthanol et en dioxyde de carbone.",
+ steps:[
+  ["Réactif","Glucose."],
+  ["Transformation","Des micro-organismes réalisent une fermentation."],
+  ["Produits","Éthanol et dioxyde de carbone."]
+ ],
+ note:"La fermentation dépend des micro-organismes, de la température et d'autres conditions. Cette équation simplifiée ne décrit pas toutes les étapes biochimiques.",
+ result:"Une molécule de glucose donne théoriquement deux molécules d'éthanol et deux molécules de dioxyde de carbone."
+}
+];
+
+const $ = id => document.getElementById(id);
+let currentCompound = compounds[1];
+let currentReaction = reactions[0];
+let currentQuestion = 0;
+let score = 0;
+let answered = false;
+
+function safeText(value){
+ return String(value).replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
+}
+
+function drawMolecule(compound){
+ const minX=Math.min(...compound.nodes.map(n=>n[1]));
+ const maxX=Math.max(...compound.nodes.map(n=>n[1]));
+ const minY=Math.min(...compound.nodes.map(n=>n[2]));
+ const maxY=Math.max(...compound.nodes.map(n=>n[2]));
+ const width=Math.max(maxX-minX+70,260);
+ const height=Math.max(maxY-minY+70,190);
+ const ox=(width-(maxX-minX))/2-minX;
+ const oy=(height-(maxY-minY))/2-minY;
+ let svg=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Schéma moléculaire simplifié de ${safeText(compound.name)}">`;
+ compound.links.forEach(link=>{
+   const a=compound.nodes[link[0]],b=compound.nodes[link[1]];
+   const x1=a[1]+ox,y1=a[2]+oy,x2=b[1]+ox,y2=b[2]+oy;
+   if(link[2]==="double"){
+     const dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy)||1;
+     const px=-dy/len*3.5,py=dx/len*3.5;
+     svg+=`<line class="bond" x1="${x1+px}" y1="${y1+py}" x2="${x2+px}" y2="${y2+py}"/>`;
+     svg+=`<line class="bond" x1="${x1-px}" y1="${y1-py}" x2="${x2-px}" y2="${y2-py}"/>`;
+   }else{
+     svg+=`<line class="bond" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+   }
+ });
+ compound.nodes.forEach(atom=>{
+   const type=atom[0],x=atom[1]+ox,y=atom[2]+oy;
+   const colorClass=["C","O","H","N","S","Cl"].includes(type)?type:"C";
+   const r=type==="H"?12:17;
+   const labelColor=type==="H"?"#17324d":"#fff";
+   svg+=`<circle class="atom-${colorClass}" cx="${x}" cy="${y}" r="${r}"/>`;
+   svg+=`<text x="${x}" y="${y+5}" text-anchor="middle" font-size="${type==="Cl"?11:13}" font-weight="bold" fill="${labelColor}">${type}</text>`;
+ });
+ svg+="</svg>";
+ $("moleculeModel").innerHTML=svg;
+}
+
+function showCompound(compound){
+ currentCompound=compound;
+ $("compoundSelect").value=compound.id;
+ $("family").textContent=compound.family;
+ $("compoundName").textContent=compound.name;
+ $("formula").textContent=compound.formula;
+ $("semi").textContent=compound.semi;
+ $("mass").textContent=compound.mass;
+ $("group").textContent=compound.group;
+ $("description").textContent=compound.description;
+ $("atoms").textContent=compound.atoms;
+ $("bonds").textContent=compound.bonds;
+ $("familyShort").textContent=compound.family;
+ drawMolecule(compound);
+ $("examples").innerHTML=compound.examples.map(item=>
+   `<div class="product"><strong>${safeText(item[0])}</strong><p>${safeText(item[1])}</p></div>`
+ ).join("");
+ $("safety").textContent="Sécurité : "+compound.safety;
+}
+
+function populateCompounds(){
+ $("compoundSelect").innerHTML=compounds.map(c=>
+  `<option value="${c.id}">${safeText(c.name)} — ${safeText(c.formula)}</option>`
+ ).join("");
+ showCompound(currentCompound);
+}
+$("compoundSelect").addEventListener("change",()=>{
+ const found=compounds.find(c=>c.id===$("compoundSelect").value);
+ if(found)showCompound(found);
+ $("search").value="";
+});
+$("search").addEventListener("input",()=>{
+ const q=$("search").value.trim().toLocaleLowerCase("fr");
+ const found=compounds.find(c=>
+  c.name.toLocaleLowerCase("fr").includes(q)||
+  c.formula.toLocaleLowerCase("fr").includes(q)||
+  c.searchFormula.toLocaleLowerCase("fr").includes(q)||
+  c.family.toLocaleLowerCase("fr").includes(q)||
+  c.group.toLocaleLowerCase("fr").includes(q)
+ );
+ if(found)showCompound(found);
+});
+function nextCompound(){
+ const i=compounds.findIndex(c=>c.id===currentCompound.id);
+ showCompound(compounds[(i+1)%compounds.length]);
+ $("search").value="";
+}
+
+/* Navigation */
+document.querySelectorAll("nav button").forEach(button=>{
+ button.addEventListener("click",()=>{
+  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  button.classList.add("active");
+  $(""+button.dataset.page).classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+ });
+});
+
+/* Catalogue des exemples de produits */
+function renderCatalog(query=""){
+ const q=query.toLocaleLowerCase("fr");
+ const entries=[];
+ compounds.forEach(c=>{
+  c.examples.forEach(ex=>{
+   entries.push({name:ex[0],compound:c.name,formula:c.formula,desc:ex[1],family:c.family});
+  });
+ });
+ const filtered=entries.filter(e=>
+  [e.name,e.compound,e.formula,e.desc,e.family].join(" ").toLocaleLowerCase("fr").includes(q)
+ );
+ $("productCatalog").innerHTML=filtered.length?filtered.map(e=>`
+  <div class="product">
+   <strong>${safeText(e.name)}</strong>
+   <p style="margin:5px 0">${safeText(e.desc)}</p>
+   <span class="tag">${safeText(e.compound)} · ${safeText(e.formula)}</span>
+   <button class="btn secondary" style="margin-top:10px" data-compound="${safeText(compounds.find(c=>c.name===e.compound).id)}">Explorer le composé</button>
+  </div>`).join(""):"<p>Aucun exemple trouvé. Essayez un autre terme.</p>";
+ $("productCatalog").querySelectorAll("[data-compound]").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+   showCompound(compounds.find(c=>c.id===btn.dataset.compound));
+   document.querySelector('[data-page="explorer"]').click();
+  });
+ });
+}
+$("productSearch").addEventListener("input",()=>renderCatalog($("productSearch").value));
+
+/* Simulateur de réactions */
+function populateReactions(){
+ $("reactionSelect").innerHTML=reactions.map(r=>
+  `<option value="${r.id}">${safeText(r.name)}</option>`
+ ).join("");
+ showReaction(reactions[0]);
+}
+function showReaction(r){
+ currentReaction=r;
+ $("reactionSelect").value=r.id;
+ $("reactionType").textContent=r.type;
+ $("reactionName").textContent=r.name;
+ $("equation").textContent=r.equation;
+ $("reactionIntro").textContent=r.intro;
+ $("reactionSteps").innerHTML=r.steps.map((s,i)=>`
+  <div class="reaction-step"><span class="number">${i+1}</span>
+  <div><strong>${safeText(s[0])}</strong><p style="margin:4px 0">${safeText(s[1])}</p></div></div>`
+ ).join("");
+ $("reactionNote").textContent=r.note;
+ $("simulationResult").innerHTML="";
+ $("simulateBtn").disabled=false;
+}
+$("reactionSelect").addEventListener("change",()=>{
+ showReaction(reactions.find(r=>r.id===$("reactionSelect").value));
+});
+$("simulateBtn").addEventListener("click",()=>{
+ $("simulationResult").innerHTML=`
+  <div class="card" style="background:#f0fdf4;border-color:#bbf7d0">
+   <h3 style="color:#166534">✓ Simulation théorique terminée</h3>
+   <p>${safeText(currentReaction.result)}</p>
+   <p><strong>Équation :</strong> ${safeText(currentReaction.equation)}</p>
+   <p class="small">Aucune réaction réelle n'a été effectuée. Les quantités, la vitesse et le rendement ne sont pas calculés.</p>
+  </div>`;
+});
+$("resetReaction").addEventListener("click",()=>showReaction(currentReaction));
+
+/* Quiz */
+const questions=[
+ {q:"Quelle est la formule brute de l'éthanol ?",a:["CH₄","C₂H₆O","C₆H₁₂O₆","C₂H₄"],correct:1,why:"L'éthanol a pour formule brute C₂H₆O et pour formule semi-développée CH₃–CH₂–OH."},
+ {q:"Quel groupe caractérise les acides carboxyliques ?",a:["–OH uniquement","C=C","–COOH","–NH₂ uniquement"],correct:2,why:"Le groupe carboxyle –COOH caractérise les acides carboxyliques."},
+ {q:"Quel composé est naturellement présent dans le citron ?",a:["Acide citrique","Benzène","Méthane pur","Polyéthylène"],correct:0,why:"L'acide citrique est présent naturellement dans les agrumes."},
+ {q:"Quel composé est un alcène ?",a:["Éthanol","Éthène","Acétone","Acide éthanoïque"],correct:1,why:"L'éthène C₂H₄ contient une double liaison carbone-carbone."},
+ {q:"Quels sont les produits de la combustion complète de l'éthanol ?",a:["Éthanol et eau","CO₂ et H₂O","Glucose et oxygène","Éthène et hydrogène"],correct:1,why:"La combustion complète produit du dioxyde de carbone et de l'eau."},
+ {q:"Quel composé contribue à l'effet stimulant du café ?",a:["Cellulose","Caféine","Acide acétique seulement","Glycérol"],correct:1,why:"La caféine est un composé stimulant présent dans le café et le thé."},
+ {q:"Quel est le rôle principal de la formule brute ?",a:["Montrer exactement la forme 3D","Indiquer le nombre de chaque type d'atome","Indiquer la couleur de la substance","Donner la température de réaction"],correct:1,why:"La formule brute donne la nature et le nombre des atomes d'une molécule."},
+ {q:"Quel composé est un ester ?",a:["Éthanoate d'éthyle","Méthane","Glucose","Benzène"],correct:0,why:"L'éthanoate d'éthyle est un ester, identifiable par le groupe –COO–."},
+ {q:"Le glycérol est classé parmi les...",a:["Alcènes","Triols","Alcanes simples","Acides minéraux"],correct:1,why:"Le glycérol possède trois groupes hydroxyles –OH : c'est un triol."},
+ {q:"Pendant une réaction chimique équilibrée, que conserve-t-on ?",a:["La couleur","Le nombre d'atomes de chaque élément","Toujours le volume","Toujours la température"],correct:1,why:"Une équation chimique équilibrée conserve le nombre d'atomes de chaque élément."}
+];
+function showQuestion(){
+ answered=false;
+ const q=questions[currentQuestion];
+ $("quizCounter").textContent=`Question ${currentQuestion+1} / ${questions.length}`;
+ $("quizScore").textContent=score;
+ $("quizProgress").style.width=`${currentQuestion/questions.length*100}%`;
+ $("question").textContent=q.q;
+ $("quizFeedback").textContent="";
+ $("nextQuestion").disabled=true;
+ $("nextQuestion").textContent=currentQuestion===questions.length-1?"Voir le résultat →":"Question suivante →";
+ $("answers").innerHTML=q.a.map((a,i)=>
+  `<button class="quiz-option" data-answer="${i}">${String.fromCharCode(65+i)}. ${safeText(a)}</button>`
+ ).join("");
+ $("answers").querySelectorAll("button").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+   if(answered)return;
+   answered=true;
+   const choice=Number(btn.dataset.answer);
+   $("answers").querySelectorAll("button").forEach((b,i)=>{
+    b.disabled=true;
+    if(i===q.correct)b.classList.add("correct");
+    if(i===choice&&choice!==q.correct)b.classList.add("wrong");
+   });
+   if(choice===q.correct)score++;
+   $("quizScore").textContent=score;
+   $("quizFeedback").textContent=(choice===q.correct?"Bonne réponse ! ":"Réponse incorrecte. ")+q.why;
+   $("nextQuestion").disabled=false;
+   $("quizProgress").style.width=`${(currentQuestion+1)/questions.length*100}%`;
+  });
+ });
+}
+$("nextQuestion").addEventListener("click",()=>{
+ if(!answered)return;
+ if(currentQuestion<questions.length-1){
+  currentQuestion++;
+  showQuestion();
+ }else{
+  $("question").textContent=`Quiz terminé : ${score} / ${questions.length}`;
+  $("answers").innerHTML=`<p>${score>=8?"Excellent travail !":score>=5?"Bon début ! Continuez à réviser.":"Relisez le guide et réessayez."}</p>`;
+  $("quizFeedback").textContent="Votre score est calculé uniquement dans cette session. Aucune donnée personnelle n'est enregistrée.";
+  $("quizCounter").textContent="Résultat final";
+  $("quizProgress").style.width="100%";
+  $("nextQuestion").disabled=true;
+ }
+});
+$("restartQuiz").addEventListener("click",()=>{
+ currentQuestion=0;score=0;showQuestion();
+});
+
+/* Initialisation */
+populateCompounds();
+populateReactions();
+renderCatalog();
+showQuestion();
+</script>
+</body>
+</html>
